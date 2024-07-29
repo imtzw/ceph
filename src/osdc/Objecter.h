@@ -2223,6 +2223,7 @@ public:
     bool sort_bitwise = false;
 
     bool at_end_of_pool = false; ///< publicly visible end flag
+    bool fix_pg = false;
 
     int64_t pool_id = -1;
     int pool_snap_seq = 0;

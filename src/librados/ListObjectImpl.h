@@ -68,6 +68,7 @@ class NObjectIteratorImpl {
     librados::ObjectCursor get_cursor();
 
     void set_filter(const bufferlist &bl);
+    void set_fix_pg();
 
     NObjectIteratorImpl(ObjListCtx *ctx_);
     void get_next();

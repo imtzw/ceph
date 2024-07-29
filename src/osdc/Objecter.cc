@@ -3900,6 +3900,18 @@ void Objecter::_nlist_reply(NListContext *list_context, int r,
 		 << ", response.entries " << response.entries
 		 << ", handle " << response.handle
 		 << ", tentative new pos " << list_context->pos << dendl;
+  if (list_context->fix_pg) {
+    shared_lock rl(rwlock);
+    if (osdmap->get_pg_pool(list_context->pool_id)->raw_hash_to_pg(list_context->pos.get_hash()) != (uint32_t)list_context->current_pg) {
+    rl.unlock();
+    ldout(cct, 20) << "iterating with fixed pg, set pointer to pool end" << dendl;
+    list_context->pos = hobject_t::get_max();
+    // put_nlist_context_budget(list_context);
+    // final_finish->complete(0);
+    // return;
+    }
+
+  }
   if (response_size) {
     std::move(response.entries.begin(), response.entries.end(),
 	      std::back_inserter(list_context->list));

@@ -144,6 +144,8 @@ inline namespace v14_2_0 {
      * to know/understand the format expected by the OSD)
      */
     void set_filter(const bufferlist &bl);
+    // limit iterating to the beginning pg
+    void set_fix_pg();
 
   private:
     NObjectIterator(ObjListCtx *ctx_);
@@ -982,7 +984,8 @@ inline namespace v14_2_0 {
     /// Start enumerating objects for a pool starting from a hash position.
     /// Errors are thrown as exceptions.
     NObjectIterator nobjects_begin(uint32_t start_hash_position,
-                                   const bufferlist &filter=bufferlist());
+                                   const bufferlist &filter=bufferlist(), 
+                                   bool fix_pg=false);
     /// Start enumerating objects for a pool starting from cursor. Errors are
     /// thrown as exceptions.
     NObjectIterator nobjects_begin(const librados::ObjectCursor& cursor,

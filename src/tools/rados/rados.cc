@@ -2452,7 +2452,7 @@ static int rados_tool_common(const std::map < std::string, std::string > &opts,
         formatter->open_array_section("objects");
       }
       try {
-	librados::NObjectIterator i = pgid ? io_ctx.nobjects_begin(pgid->ps()) : io_ctx.nobjects_begin();
+	librados::NObjectIterator i = pgid ? io_ctx.nobjects_begin(pgid->ps(), bufferlist(), true) : io_ctx.nobjects_begin();
 	const librados::NObjectIterator i_end = io_ctx.nobjects_end();
 	for (; i != i_end; ++i) {
 #ifdef WITH_LIBRADOSSTRIPER

@@ -840,6 +840,12 @@ void librados::NObjectIteratorImpl::set_filter(const bufferlist &bl)
   ctx->nlc->filter = bl;
 }
 
+void librados::NObjectIteratorImpl::set_fix_pg()
+{
+  ceph_assert(ctx);
+  ctx->nlc->fix_pg = true;
+}
+
 void librados::NObjectIteratorImpl::get_next()
 {
   const char *entry, *key, *nspace;
@@ -961,6 +967,11 @@ librados::ObjectCursor librados::NObjectIterator::get_cursor()
 void librados::NObjectIterator::set_filter(const bufferlist &bl)
 {
   impl->set_filter(bl);
+}
+
+void librados::NObjectIterator::set_fix_pg()
+{
+  impl->set_fix_pg();
 }
 
 void librados::NObjectIterator::get_next()
@@ -1882,13 +1893,16 @@ librados::NObjectIterator librados::IoCtx::nobjects_begin(
 }
 
 librados::NObjectIterator librados::IoCtx::nobjects_begin(
-  uint32_t pos, const bufferlist &filter)
+  uint32_t pos, const bufferlist &filter, bool fix_pg)
 {
   rados_list_ctx_t listh;
   rados_nobjects_list_open(io_ctx_impl, &listh);
   NObjectIterator iter((ObjListCtx*)listh);
   if (filter.length() > 0) {
     iter.set_filter(filter);
+  }
+  if (fix_pg) {
+    iter.set_fix_pg();
   }
   iter.seek(pos);
   return iter;
